@@ -1,3 +1,4 @@
+import 'bloc/profile_one_bloc.dart';
 import 'models/profile_one_model.dart';
 import 'package:flutter/material.dart';
 import 'package:kushagra_s_application2/core/app_export.dart';
@@ -6,61 +7,61 @@ import 'package:kushagra_s_application2/widgets/app_bar/appbar_leading_image.dar
 import 'package:kushagra_s_application2/widgets/app_bar/appbar_title.dart';
 import 'package:kushagra_s_application2/widgets/app_bar/custom_app_bar.dart';
 import 'package:kushagra_s_application2/widgets/custom_floating_text_field.dart';
-import 'provider/profile_one_provider.dart';
-
-class ProfileOneScreen extends StatefulWidget {
-  const ProfileOneScreen({Key? key}) : super(key: key);
-
-  @override
-  ProfileOneScreenState createState() => ProfileOneScreenState();
-
-  static Widget builder(BuildContext context) {
-    return ChangeNotifierProvider(
-        create: (context) => ProfileOneProvider(), child: ProfileOneScreen());
-  }
-}
 
 // ignore_for_file: must_be_immutable
-class ProfileOneScreenState extends State<ProfileOneScreen> {
+class ProfileOneScreen extends StatelessWidget {
+  ProfileOneScreen({Key? key}) : super(key: key);
+
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  @override
-  void initState() {
-    super.initState();
+  static Widget builder(BuildContext context) {
+    return BlocProvider<ProfileOneBloc>(
+        create: (context) => ProfileOneBloc(
+            ProfileOneState(profileOneModelObj: ProfileOneModel()))
+          ..add(ProfileOneInitialEvent()),
+        child: ProfileOneScreen());
   }
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-        child: Scaffold(
-            resizeToAvoidBottomInset: false,
-            appBar: _buildAppBar(context),
-            body: Form(
-                key: _formKey,
-                child: Container(
-                    width: double.maxFinite,
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 23.h, vertical: 14.v),
-                    child: Column(children: [
-                      CustomImageView(
-                          imagePath: ImageConstant.imgEllipse23,
-                          height: 101.adaptSize,
-                          width: 101.adaptSize,
-                          radius: BorderRadius.circular(50.h)),
-                      SizedBox(height: 19.v),
-                      _buildProfileName(context),
-                      SizedBox(height: 14.v),
-                      _buildDateOfBirth(context),
-                      SizedBox(height: 14.v),
-                      _buildKidsIdValue(context),
-                      SizedBox(height: 15.v),
-                      _buildName(context),
-                      SizedBox(height: 13.v),
-                      _buildEmail(context),
-                      SizedBox(height: 13.v),
-                      _buildPhoneNumber(context),
-                      SizedBox(height: 5.v)
-                    ])))));
+    return BlocBuilder<ProfileOneBloc, ProfileOneState>(
+        builder: (context, state) {
+      return SafeArea(
+          child: Scaffold(
+              resizeToAvoidBottomInset: false,
+              appBar: _buildAppBar(context),
+              body: SizedBox(
+                  width: SizeUtils.width,
+                  child: SingleChildScrollView(
+                      padding: EdgeInsets.only(
+                          bottom: MediaQuery.of(context).viewInsets.bottom),
+                      child: Form(
+                          key: _formKey,
+                          child: Container(
+                              width: double.maxFinite,
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 23.h, vertical: 14.v),
+                              child: Column(children: [
+                                CustomImageView(
+                                    imagePath: ImageConstant.imgEllipse23,
+                                    height: 101.adaptSize,
+                                    width: 101.adaptSize,
+                                    radius: BorderRadius.circular(50.h)),
+                                SizedBox(height: 19.v),
+                                _buildName(context),
+                                SizedBox(height: 14.v),
+                                _buildDateOfBirth(context),
+                                SizedBox(height: 14.v),
+                                _buildKidsIdvalue(context),
+                                SizedBox(height: 15.v),
+                                _buildName1(context),
+                                SizedBox(height: 13.v),
+                                _buildEmail(context),
+                                SizedBox(height: 13.v),
+                                _buildPhoneNumber(context),
+                                SizedBox(height: 5.v)
+                              ])))))));
+    });
   }
 
   /// Section Widget
@@ -78,12 +79,13 @@ class ProfileOneScreenState extends State<ProfileOneScreen> {
   }
 
   /// Section Widget
-  Widget _buildProfileName(BuildContext context) {
-    return Selector<ProfileOneProvider, TextEditingController?>(
-        selector: (context, provider) => provider.profileNameController,
-        builder: (context, profileNameController, child) {
+  Widget _buildName(BuildContext context) {
+    return BlocSelector<ProfileOneBloc, ProfileOneState,
+            TextEditingController?>(
+        selector: (state) => state.nameController,
+        builder: (context, nameController) {
           return CustomFloatingTextField(
-              controller: profileNameController,
+              controller: nameController,
               labelText: "lbl_kid_name".tr,
               labelStyle: theme.textTheme.titleMedium!,
               hintText: "lbl_kid_name".tr,
@@ -98,9 +100,10 @@ class ProfileOneScreenState extends State<ProfileOneScreen> {
 
   /// Section Widget
   Widget _buildDateOfBirth(BuildContext context) {
-    return Selector<ProfileOneProvider, TextEditingController?>(
-        selector: (context, provider) => provider.dateOfBirthController,
-        builder: (context, dateOfBirthController, child) {
+    return BlocSelector<ProfileOneBloc, ProfileOneState,
+            TextEditingController?>(
+        selector: (state) => state.dateOfBirthController,
+        builder: (context, dateOfBirthController) {
           return CustomFloatingTextField(
               controller: dateOfBirthController,
               labelText: "lbl_date_of_birth".tr,
@@ -111,12 +114,13 @@ class ProfileOneScreenState extends State<ProfileOneScreen> {
   }
 
   /// Section Widget
-  Widget _buildKidsIdValue(BuildContext context) {
-    return Selector<ProfileOneProvider, TextEditingController?>(
-        selector: (context, provider) => provider.kidsIdValueController,
-        builder: (context, kidsIdValueController, child) {
+  Widget _buildKidsIdvalue(BuildContext context) {
+    return BlocSelector<ProfileOneBloc, ProfileOneState,
+            TextEditingController?>(
+        selector: (state) => state.kidsIdvalueController,
+        builder: (context, kidsIdvalueController) {
           return CustomFloatingTextField(
-              controller: kidsIdValueController,
+              controller: kidsIdvalueController,
               labelText: "lbl_kid_s_id".tr,
               labelStyle: theme.textTheme.titleMedium!,
               hintText: "lbl_kid_s_id".tr,
@@ -131,12 +135,13 @@ class ProfileOneScreenState extends State<ProfileOneScreen> {
   }
 
   /// Section Widget
-  Widget _buildName(BuildContext context) {
-    return Selector<ProfileOneProvider, TextEditingController?>(
-        selector: (context, provider) => provider.nameController,
-        builder: (context, nameController, child) {
+  Widget _buildName1(BuildContext context) {
+    return BlocSelector<ProfileOneBloc, ProfileOneState,
+            TextEditingController?>(
+        selector: (state) => state.nameController1,
+        builder: (context, nameController1) {
           return CustomFloatingTextField(
-              controller: nameController,
+              controller: nameController1,
               labelText: "lbl_parent_name".tr,
               labelStyle: theme.textTheme.titleMedium!,
               hintText: "lbl_parent_name".tr,
@@ -151,9 +156,10 @@ class ProfileOneScreenState extends State<ProfileOneScreen> {
 
   /// Section Widget
   Widget _buildEmail(BuildContext context) {
-    return Selector<ProfileOneProvider, TextEditingController?>(
-        selector: (context, provider) => provider.emailController,
-        builder: (context, emailController, child) {
+    return BlocSelector<ProfileOneBloc, ProfileOneState,
+            TextEditingController?>(
+        selector: (state) => state.emailController,
+        builder: (context, emailController) {
           return CustomFloatingTextField(
               controller: emailController,
               labelText: "lbl_parent_email".tr,
@@ -171,9 +177,10 @@ class ProfileOneScreenState extends State<ProfileOneScreen> {
 
   /// Section Widget
   Widget _buildPhoneNumber(BuildContext context) {
-    return Selector<ProfileOneProvider, TextEditingController?>(
-        selector: (context, provider) => provider.phoneNumberController,
-        builder: (context, phoneNumberController, child) {
+    return BlocSelector<ProfileOneBloc, ProfileOneState,
+            TextEditingController?>(
+        selector: (state) => state.phoneNumberController,
+        builder: (context, phoneNumberController) {
           return CustomFloatingTextField(
               controller: phoneNumberController,
               labelText: "msg_parent_phone_number".tr,

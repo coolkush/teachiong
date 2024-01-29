@@ -58,8 +58,8 @@ Resolve the errors and warnings that are shown in the application.
 
 ### Libraries and tools used
 
-- Provider - State management
-  https://pub.dev/packages/provider
+- BLoC - State management
+  https://bloclibrary.dev
 - cached_network_image - For storing internet image into cache
   https://pub.dev/packages/cached_network_image
 

@@ -1,31 +1,25 @@
+import 'bloc/splash_one_bloc.dart';
 import 'models/splash_one_model.dart';
 import 'package:flutter/material.dart';
 import 'package:kushagra_s_application2/core/app_export.dart';
 import 'package:kushagra_s_application2/widgets/app_bar/appbar_leading_image.dart';
 import 'package:kushagra_s_application2/widgets/app_bar/custom_app_bar.dart';
 import 'package:kushagra_s_application2/widgets/custom_radio_button.dart';
-import 'provider/splash_one_provider.dart';
 
-class SplashOneScreen extends StatefulWidget {
+class SplashOneScreen extends StatelessWidget {
   const SplashOneScreen({Key? key})
       : super(
           key: key,
         );
 
-  @override
-  SplashOneScreenState createState() => SplashOneScreenState();
   static Widget builder(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => SplashOneProvider(),
+    return BlocProvider<SplashOneBloc>(
+      create: (context) => SplashOneBloc(SplashOneState(
+        splashOneModelObj: SplashOneModel(),
+      ))
+        ..add(SplashOneInitialEvent()),
       child: SplashOneScreen(),
     );
-  }
-}
-
-class SplashOneScreenState extends State<SplashOneScreen> {
-  @override
-  void initState() {
-    super.initState();
   }
 
   @override
@@ -53,7 +47,7 @@ class SplashOneScreenState extends State<SplashOneScreen> {
             child: Column(
               children: [
                 SizedBox(height: 39.v),
-                _buildAdminGroup(context),
+                _buildGroup34(context),
                 SizedBox(height: 15.v),
                 CustomImageView(
                   imagePath: ImageConstant.imgPortraitYoung,
@@ -104,12 +98,12 @@ class SplashOneScreenState extends State<SplashOneScreen> {
   }
 
   /// Section Widget
-  Widget _buildAdminGroup(BuildContext context) {
+  Widget _buildGroup34(BuildContext context) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 23.h),
-      child: Consumer<SplashOneProvider>(
-        builder: (context, provider, child) {
-          return provider.splashOneModelObj!.radioList.isNotEmpty
+      child: BlocBuilder<SplashOneBloc, SplashOneState>(
+        builder: (context, state) {
+          return state.splashOneModelObj!.radioList.isNotEmpty
               ? Column(
                   children: [
                     Padding(
@@ -120,15 +114,17 @@ class SplashOneScreenState extends State<SplashOneScreen> {
                       child: CustomRadioButton(
                         width: 327.h,
                         text: "lbl_admin".tr,
-                        value: provider.splashOneModelObj?.radioList[1] ?? "",
-                        groupValue: provider.radioGroup,
+                        value: state.splashOneModelObj?.radioList[1] ?? "",
+                        groupValue: state.radioGroup,
                         padding: EdgeInsets.symmetric(
                           horizontal: 11.h,
                           vertical: 15.v,
                         ),
                         isRightCheck: true,
                         onChange: (value) {
-                          provider.changeRadioButton1(value);
+                          context
+                              .read<SplashOneBloc>()
+                              .add(ChangeRadioButtonEvent(value: value));
                         },
                       ),
                     ),
@@ -140,15 +136,17 @@ class SplashOneScreenState extends State<SplashOneScreen> {
                       child: CustomRadioButton(
                         width: 327.h,
                         text: "msg_governor_governess".tr,
-                        value: provider.splashOneModelObj?.radioList[2] ?? "",
-                        groupValue: provider.radioGroup,
+                        value: state.splashOneModelObj?.radioList[2] ?? "",
+                        groupValue: state.radioGroup,
                         padding: EdgeInsets.symmetric(
                           horizontal: 11.h,
                           vertical: 15.v,
                         ),
                         isRightCheck: true,
                         onChange: (value) {
-                          provider.changeRadioButton1(value);
+                          context
+                              .read<SplashOneBloc>()
+                              .add(ChangeRadioButtonEvent(value: value));
                         },
                       ),
                     ),
@@ -160,15 +158,17 @@ class SplashOneScreenState extends State<SplashOneScreen> {
                       child: CustomRadioButton(
                         width: 327.h,
                         text: "lbl_parent".tr,
-                        value: provider.splashOneModelObj?.radioList[3] ?? "",
-                        groupValue: provider.radioGroup,
+                        value: state.splashOneModelObj?.radioList[3] ?? "",
+                        groupValue: state.radioGroup,
                         padding: EdgeInsets.symmetric(
                           horizontal: 11.h,
                           vertical: 14.v,
                         ),
                         isRightCheck: true,
                         onChange: (value) {
-                          provider.changeRadioButton1(value);
+                          context
+                              .read<SplashOneBloc>()
+                              .add(ChangeRadioButtonEvent(value: value));
                         },
                       ),
                     ),
@@ -180,15 +180,17 @@ class SplashOneScreenState extends State<SplashOneScreen> {
                       child: CustomRadioButton(
                         width: 327.h,
                         text: "lbl_children".tr,
-                        value: provider.splashOneModelObj?.radioList[4] ?? "",
-                        groupValue: provider.radioGroup,
+                        value: state.splashOneModelObj?.radioList[4] ?? "",
+                        groupValue: state.radioGroup,
                         padding: EdgeInsets.symmetric(
                           horizontal: 11.h,
                           vertical: 15.v,
                         ),
                         isRightCheck: true,
                         onChange: (value) {
-                          provider.changeRadioButton1(value);
+                          context
+                              .read<SplashOneBloc>()
+                              .add(ChangeRadioButtonEvent(value: value));
                         },
                       ),
                     ),

@@ -1,15 +1,22 @@
+// ignore_for_file: must_be_immutable
+
+import 'package:equatable/equatable.dart';
 import '../../../core/app_export.dart';
 import 'eightythree_item_model.dart';
 
-class HomeModel {
-  List<EightythreeItemModel> eightythreeItemList = [
-    EightythreeItemModel(
-        widget: "3",
-        television: ImageConstant.imgTelevision,
-        physicalActivity: "Physical\nActivity"),
-    EightythreeItemModel(
-        widget: "1",
-        television: ImageConstant.imgSettingsCyan400,
-        physicalActivity: "Cognitive\nActivity")
-  ];
+/// This class defines the variables used in the [home_screen],
+/// and is typically used to hold data that is passed between different parts of the application.
+class HomeModel extends Equatable {
+  HomeModel({this.eightythreeItemList = const []}) {}
+
+  List<EightythreeItemModel> eightythreeItemList;
+
+  HomeModel copyWith({List<EightythreeItemModel>? eightythreeItemList}) {
+    return HomeModel(
+      eightythreeItemList: eightythreeItemList ?? this.eightythreeItemList,
+    );
+  }
+
+  @override
+  List<Object?> get props => [eightythreeItemList];
 }

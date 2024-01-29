@@ -1,4 +1,5 @@
 import '../home_screen/widgets/eightythree_item_widget.dart';
+import 'bloc/home_bloc.dart';
 import 'models/eightythree_item_model.dart';
 import 'models/home_model.dart';
 import 'package:flutter/material.dart';
@@ -12,28 +13,21 @@ import 'package:kushagra_s_application2/widgets/custom_elevated_button.dart';
 import 'package:outline_gradient_button/outline_gradient_button.dart';
 import 'package:staggered_grid_view_flutter/widgets/staggered_grid_view.dart';
 import 'package:staggered_grid_view_flutter/widgets/staggered_tile.dart';
-import 'provider/home_provider.dart';
 
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key})
       : super(
           key: key,
         );
 
-  @override
-  HomeScreenState createState() => HomeScreenState();
   static Widget builder(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => HomeProvider(),
+    return BlocProvider<HomeBloc>(
+      create: (context) => HomeBloc(HomeState(
+        homeModelObj: HomeModel(),
+      ))
+        ..add(HomeInitialEvent()),
       child: HomeScreen(),
     );
-  }
-}
-
-class HomeScreenState extends State<HomeScreen> {
-  @override
-  void initState() {
-    super.initState();
   }
 
   @override
@@ -281,8 +275,9 @@ class HomeScreenState extends State<HomeScreen> {
 
   /// Section Widget
   Widget _buildEightyThree(BuildContext context) {
-    return Consumer<HomeProvider>(
-      builder: (context, provider, child) {
+    return BlocSelector<HomeBloc, HomeState, HomeModel?>(
+      selector: (state) => state.homeModelObj,
+      builder: (context, homeModelObj) {
         return StaggeredGridView.countBuilder(
           shrinkWrap: true,
           primary: false,
@@ -292,10 +287,11 @@ class HomeScreenState extends State<HomeScreen> {
           staggeredTileBuilder: (index) {
             return StaggeredTile.fit(2);
           },
-          itemCount: provider.homeModelObj.eightythreeItemList.length,
+          itemCount: homeModelObj?.eightythreeItemList.length ?? 0,
           itemBuilder: (context, index) {
             EightythreeItemModel model =
-                provider.homeModelObj.eightythreeItemList[index];
+                homeModelObj?.eightythreeItemList[index] ??
+                    EightythreeItemModel();
             return EightythreeItemWidget(
               model,
             );

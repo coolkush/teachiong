@@ -1,3 +1,4 @@
+import 'bloc/tutors_one_bloc.dart';
 import 'models/tutors_one_model.dart';
 import 'package:flutter/material.dart';
 import 'package:kushagra_s_application2/core/app_export.dart';
@@ -5,42 +6,37 @@ import 'package:kushagra_s_application2/widgets/app_bar/appbar_leading_image.dar
 import 'package:kushagra_s_application2/widgets/app_bar/appbar_title.dart';
 import 'package:kushagra_s_application2/widgets/app_bar/custom_app_bar.dart';
 import 'package:kushagra_s_application2/widgets/custom_elevated_button.dart';
-import 'provider/tutors_one_provider.dart';
 
-class TutorsOneScreen extends StatefulWidget {
+class TutorsOneScreen extends StatelessWidget {
   const TutorsOneScreen({Key? key}) : super(key: key);
 
-  @override
-  TutorsOneScreenState createState() => TutorsOneScreenState();
-
   static Widget builder(BuildContext context) {
-    return ChangeNotifierProvider(
-        create: (context) => TutorsOneProvider(), child: TutorsOneScreen());
-  }
-}
-
-class TutorsOneScreenState extends State<TutorsOneScreen> {
-  @override
-  void initState() {
-    super.initState();
+    return BlocProvider<TutorsOneBloc>(
+        create: (context) =>
+            TutorsOneBloc(TutorsOneState(tutorsOneModelObj: TutorsOneModel()))
+              ..add(TutorsOneInitialEvent()),
+        child: TutorsOneScreen());
   }
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-        child: Scaffold(
-            appBar: _buildAppBar(context),
-            body: Container(
-                width: double.maxFinite,
-                padding: EdgeInsets.symmetric(horizontal: 24.h),
-                child: Column(children: [
-                  _buildStartColumn(context),
-                  SizedBox(height: 13.v),
-                  _buildLineRow(context),
-                  SizedBox(height: 13.v),
-                  _buildYourGovernessWillColumn(context),
-                  SizedBox(height: 5.v)
-                ]))));
+    return BlocBuilder<TutorsOneBloc, TutorsOneState>(
+        builder: (context, state) {
+      return SafeArea(
+          child: Scaffold(
+              appBar: _buildAppBar(context),
+              body: Container(
+                  width: double.maxFinite,
+                  padding: EdgeInsets.symmetric(horizontal: 24.h),
+                  child: Column(children: [
+                    _buildStart(context),
+                    SizedBox(height: 13.v),
+                    _buildLine(context),
+                    SizedBox(height: 13.v),
+                    _buildYourGovernessWill(context),
+                    SizedBox(height: 5.v)
+                  ]))));
+    });
   }
 
   /// Section Widget
@@ -58,7 +54,7 @@ class TutorsOneScreenState extends State<TutorsOneScreen> {
   }
 
   /// Section Widget
-  Widget _buildStartColumn(BuildContext context) {
+  Widget _buildStart(BuildContext context) {
     return Container(
         width: 327.h,
         padding: EdgeInsets.symmetric(horizontal: 16.h, vertical: 8.v),
@@ -83,7 +79,7 @@ class TutorsOneScreenState extends State<TutorsOneScreen> {
   }
 
   /// Section Widget
-  Widget _buildLineRow(BuildContext context) {
+  Widget _buildLine(BuildContext context) {
     return Container(
         padding: EdgeInsets.symmetric(vertical: 15.v),
         decoration: AppDecoration.gradientGrayToRed
@@ -129,7 +125,7 @@ class TutorsOneScreenState extends State<TutorsOneScreen> {
   }
 
   /// Section Widget
-  Widget _buildYourGovernessWillColumn(BuildContext context) {
+  Widget _buildYourGovernessWill(BuildContext context) {
     return Container(
         padding: EdgeInsets.symmetric(horizontal: 27.h, vertical: 93.v),
         decoration: AppDecoration.outlineBlue

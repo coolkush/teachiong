@@ -1,5 +1,6 @@
 import '../tutors_screen/widgets/taskcompleted_item_widget.dart';
 import '../tutors_screen/widgets/userprofile1_item_widget.dart';
+import 'bloc/tutors_bloc.dart';
 import 'models/taskcompleted_item_model.dart';
 import 'models/tutors_model.dart';
 import 'models/userprofile1_item_model.dart';
@@ -9,24 +10,16 @@ import 'package:kushagra_s_application2/widgets/app_bar/appbar_leading_image.dar
 import 'package:kushagra_s_application2/widgets/app_bar/appbar_title.dart';
 import 'package:kushagra_s_application2/widgets/app_bar/custom_app_bar.dart';
 import 'package:table_calendar/table_calendar.dart';
-import 'provider/tutors_provider.dart';
 
-class TutorsScreen extends StatefulWidget {
+class TutorsScreen extends StatelessWidget {
   const TutorsScreen({Key? key}) : super(key: key);
 
-  @override
-  TutorsScreenState createState() => TutorsScreenState();
-
   static Widget builder(BuildContext context) {
-    return ChangeNotifierProvider(
-        create: (context) => TutorsProvider(), child: TutorsScreen());
-  }
-}
-
-class TutorsScreenState extends State<TutorsScreen> {
-  @override
-  void initState() {
-    super.initState();
+    return BlocProvider<TutorsBloc>(
+        create: (context) =>
+            TutorsBloc(TutorsState(tutorsModelObj: TutorsModel()))
+              ..add(TutorsInitialEvent()),
+        child: TutorsScreen());
   }
 
   @override
@@ -83,7 +76,7 @@ class TutorsScreenState extends State<TutorsScreen> {
             ]))
       ]),
       SizedBox(height: 4.v),
-      Consumer<TutorsProvider>(builder: (context, provider, child) {
+      BlocBuilder<TutorsBloc, TutorsState>(builder: (context, state) {
         return SizedBox(
             height: 74.v,
             width: 327.h,
@@ -92,7 +85,7 @@ class TutorsScreenState extends State<TutorsScreen> {
                 firstDay: DateTime(DateTime.now().year - 5),
                 lastDay: DateTime(DateTime.now().year + 5),
                 calendarFormat: CalendarFormat.month,
-                rangeSelectionMode: provider.rangeSelectionMode,
+                rangeSelectionMode: state.rangeSelectionMode,
                 startingDayOfWeek: StartingDayOfWeek.sunday,
                 headerStyle: HeaderStyle(
                     formatButtonVisible: false, titleCentered: true),
@@ -100,24 +93,24 @@ class TutorsScreenState extends State<TutorsScreen> {
                     outsideDaysVisible: false, isTodayHighlighted: true),
                 daysOfWeekStyle: DaysOfWeekStyle(),
                 headerVisible: false,
-                focusedDay: provider.focusedDay ?? DateTime.now(),
-                rangeStartDay: provider.rangeStart,
-                rangeEndDay: provider.rangeEnd,
+                focusedDay: state.focusedDay ?? DateTime.now(),
+                rangeStartDay: state.rangeStart,
+                rangeEndDay: state.rangeEnd,
                 onDaySelected: (selectedDay, focusedDay) {
-                  if (!isSameDay(selectedDay, selectedDay)) {
-                    provider.focusedDay = focusedDay;
-                    provider.selectedDay = selectedDay;
-                    provider.rangeSelectionMode = RangeSelectionMode.toggledOn;
+                  if (!isSameDay(state.selectedDay, selectedDay)) {
+                    state.focusedDay = focusedDay;
+                    state.selectedDay = selectedDay;
+                    state.rangeSelectionMode = RangeSelectionMode.toggledOn;
                   }
                 },
                 onRangeSelected: (start, end, focusedDay) {
-                  provider.focusedDay = focusedDay;
-                  provider.rangeEnd = end;
-                  provider.rangeStart = start;
-                  provider.rangeSelectionMode = RangeSelectionMode.toggledOn;
+                  state.focusedDay = focusedDay;
+                  state.rangeEnd = end;
+                  state.rangeStart = start;
+                  state.rangeSelectionMode = RangeSelectionMode.toggledOn;
                 },
                 onPageChanged: (focusedDay) {
-                  provider.focusedDay = focusedDay;
+                  state.focusedDay = focusedDay;
                 }));
       })
     ]);
@@ -127,37 +120,43 @@ class TutorsScreenState extends State<TutorsScreen> {
   Widget _buildTaskCompleted(BuildContext context) {
     return SizedBox(
         height: 119.v,
-        child: Consumer<TutorsProvider>(builder: (context, provider, child) {
-          return ListView.separated(
-              scrollDirection: Axis.horizontal,
-              separatorBuilder: (context, index) {
-                return SizedBox(width: 15.h);
-              },
-              itemCount: provider.tutorsModelObj.taskcompletedItemList.length,
-              itemBuilder: (context, index) {
-                TaskcompletedItemModel model =
-                    provider.tutorsModelObj.taskcompletedItemList[index];
-                return TaskcompletedItemWidget(model);
-              });
-        }));
+        child: BlocSelector<TutorsBloc, TutorsState, TutorsModel?>(
+            selector: (state) => state.tutorsModelObj,
+            builder: (context, tutorsModelObj) {
+              return ListView.separated(
+                  scrollDirection: Axis.horizontal,
+                  separatorBuilder: (context, index) {
+                    return SizedBox(width: 15.h);
+                  },
+                  itemCount: tutorsModelObj?.taskcompletedItemList.length ?? 0,
+                  itemBuilder: (context, index) {
+                    TaskcompletedItemModel model =
+                        tutorsModelObj?.taskcompletedItemList[index] ??
+                            TaskcompletedItemModel();
+                    return TaskcompletedItemWidget(model);
+                  });
+            }));
   }
 
   /// Section Widget
   Widget _buildUserProfile(BuildContext context) {
-    return Consumer<TutorsProvider>(builder: (context, provider, child) {
-      return ListView.separated(
-          physics: NeverScrollableScrollPhysics(),
-          shrinkWrap: true,
-          separatorBuilder: (context, index) {
-            return SizedBox(height: 10.v);
-          },
-          itemCount: provider.tutorsModelObj.userprofile1ItemList.length,
-          itemBuilder: (context, index) {
-            Userprofile1ItemModel model =
-                provider.tutorsModelObj.userprofile1ItemList[index];
-            return Userprofile1ItemWidget(model);
-          });
-    });
+    return BlocSelector<TutorsBloc, TutorsState, TutorsModel?>(
+        selector: (state) => state.tutorsModelObj,
+        builder: (context, tutorsModelObj) {
+          return ListView.separated(
+              physics: NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              separatorBuilder: (context, index) {
+                return SizedBox(height: 10.v);
+              },
+              itemCount: tutorsModelObj?.userprofile1ItemList.length ?? 0,
+              itemBuilder: (context, index) {
+                Userprofile1ItemModel model =
+                    tutorsModelObj?.userprofile1ItemList[index] ??
+                        Userprofile1ItemModel();
+                return Userprofile1ItemWidget(model);
+              });
+        });
   }
 
   /// Navigates to the previous screen.

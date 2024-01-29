@@ -21,10 +21,14 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return Sizer(
       builder: (context, orientation, deviceType) {
-        return ChangeNotifierProvider(
-          create: (context) => ThemeProvider(),
-          child: Consumer<ThemeProvider>(
-            builder: (context, provider, child) {
+        return BlocProvider(
+          create: (context) => ThemeBloc(
+            ThemeState(
+              themeType: PrefUtils().getThemeData(),
+            ),
+          ),
+          child: BlocBuilder<ThemeBloc, ThemeState>(
+            builder: (context, state) {
               return MaterialApp(
                 theme: theme,
                 title: 'kushagra_s_application2',

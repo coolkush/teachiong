@@ -1,141 +1,139 @@
+import 'bloc/app_navigation_bloc.dart';
 import 'models/app_navigation_model.dart';
 import 'package:flutter/material.dart';
 import 'package:kushagra_s_application2/core/app_export.dart';
-import 'provider/app_navigation_provider.dart';
 
-class AppNavigationScreen extends StatefulWidget {
+class AppNavigationScreen extends StatelessWidget {
   const AppNavigationScreen({Key? key})
       : super(
           key: key,
         );
 
-  @override
-  AppNavigationScreenState createState() => AppNavigationScreenState();
   static Widget builder(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => AppNavigationProvider(),
+    return BlocProvider<AppNavigationBloc>(
+      create: (context) => AppNavigationBloc(AppNavigationState(
+        appNavigationModelObj: AppNavigationModel(),
+      ))
+        ..add(AppNavigationInitialEvent()),
       child: AppNavigationScreen(),
     );
-  }
-}
-
-class AppNavigationScreenState extends State<AppNavigationScreen> {
-  @override
-  void initState() {
-    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: Color(0XFFFFFFFF),
-        body: SizedBox(
-          width: double.maxFinite,
-          child: Column(
-            children: [
-              _buildAppNavigation(context),
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Color(0XFFFFFFFF),
-                    ),
-                    child: Column(
-                      children: [
-                        _buildScreenTitle(
-                          context,
-                          screenTitle: "splash Two".tr,
-                          onTapScreenTitle: () =>
-                              onTapScreenTitle(AppRoutes.splashTwoScreen),
+    return BlocBuilder<AppNavigationBloc, AppNavigationState>(
+      builder: (context, state) {
+        return SafeArea(
+          child: Scaffold(
+            backgroundColor: Color(0XFFFFFFFF),
+            body: SizedBox(
+              width: double.maxFinite,
+              child: Column(
+                children: [
+                  _buildAppNavigation(context),
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Color(0XFFFFFFFF),
                         ),
-                        _buildScreenTitle(
-                          context,
-                          screenTitle: "splash".tr,
-                          onTapScreenTitle: () =>
-                              onTapScreenTitle(AppRoutes.splashScreen),
+                        child: Column(
+                          children: [
+                            _buildScreenTitle(
+                              context,
+                              screenTitle: "splash Two".tr,
+                              onTapScreenTitle: () =>
+                                  onTapScreenTitle(AppRoutes.splashTwoScreen),
+                            ),
+                            _buildScreenTitle(
+                              context,
+                              screenTitle: "splash".tr,
+                              onTapScreenTitle: () =>
+                                  onTapScreenTitle(AppRoutes.splashScreen),
+                            ),
+                            _buildScreenTitle(
+                              context,
+                              screenTitle: "splash One".tr,
+                              onTapScreenTitle: () =>
+                                  onTapScreenTitle(AppRoutes.splashOneScreen),
+                            ),
+                            _buildScreenTitle(
+                              context,
+                              screenTitle: "login One".tr,
+                              onTapScreenTitle: () =>
+                                  onTapScreenTitle(AppRoutes.loginOneScreen),
+                            ),
+                            _buildScreenTitle(
+                              context,
+                              screenTitle: "login".tr,
+                              onTapScreenTitle: () =>
+                                  onTapScreenTitle(AppRoutes.loginScreen),
+                            ),
+                            _buildScreenTitle(
+                              context,
+                              screenTitle: "home".tr,
+                              onTapScreenTitle: () =>
+                                  onTapScreenTitle(AppRoutes.homeScreen),
+                            ),
+                            _buildScreenTitle(
+                              context,
+                              screenTitle: "tutors Two".tr,
+                              onTapScreenTitle: () =>
+                                  onTapScreenTitle(AppRoutes.tutorsTwoScreen),
+                            ),
+                            _buildScreenTitle(
+                              context,
+                              screenTitle: "tutors One".tr,
+                              onTapScreenTitle: () =>
+                                  onTapScreenTitle(AppRoutes.tutorsOneScreen),
+                            ),
+                            _buildScreenTitle(
+                              context,
+                              screenTitle: "tutors Three".tr,
+                              onTapScreenTitle: () =>
+                                  onTapScreenTitle(AppRoutes.tutorsThreeScreen),
+                            ),
+                            _buildScreenTitle(
+                              context,
+                              screenTitle: "tutors".tr,
+                              onTapScreenTitle: () =>
+                                  onTapScreenTitle(AppRoutes.tutorsScreen),
+                            ),
+                            _buildScreenTitle(
+                              context,
+                              screenTitle: "profile Four".tr,
+                              onTapScreenTitle: () =>
+                                  onTapScreenTitle(AppRoutes.profileFourScreen),
+                            ),
+                            _buildScreenTitle(
+                              context,
+                              screenTitle: "profile One".tr,
+                              onTapScreenTitle: () =>
+                                  onTapScreenTitle(AppRoutes.profileOneScreen),
+                            ),
+                            _buildScreenTitle(
+                              context,
+                              screenTitle: "Profile - Tab Container".tr,
+                              onTapScreenTitle: () => onTapScreenTitle(
+                                  AppRoutes.profileTabContainerScreen),
+                            ),
+                            _buildScreenTitle(
+                              context,
+                              screenTitle: "help".tr,
+                              onTapScreenTitle: () =>
+                                  onTapScreenTitle(AppRoutes.helpScreen),
+                            ),
+                          ],
                         ),
-                        _buildScreenTitle(
-                          context,
-                          screenTitle: "splash One".tr,
-                          onTapScreenTitle: () =>
-                              onTapScreenTitle(AppRoutes.splashOneScreen),
-                        ),
-                        _buildScreenTitle(
-                          context,
-                          screenTitle: "login One".tr,
-                          onTapScreenTitle: () =>
-                              onTapScreenTitle(AppRoutes.loginOneScreen),
-                        ),
-                        _buildScreenTitle(
-                          context,
-                          screenTitle: "login".tr,
-                          onTapScreenTitle: () =>
-                              onTapScreenTitle(AppRoutes.loginScreen),
-                        ),
-                        _buildScreenTitle(
-                          context,
-                          screenTitle: "home".tr,
-                          onTapScreenTitle: () =>
-                              onTapScreenTitle(AppRoutes.homeScreen),
-                        ),
-                        _buildScreenTitle(
-                          context,
-                          screenTitle: "tutors Two".tr,
-                          onTapScreenTitle: () =>
-                              onTapScreenTitle(AppRoutes.tutorsTwoScreen),
-                        ),
-                        _buildScreenTitle(
-                          context,
-                          screenTitle: "tutors One".tr,
-                          onTapScreenTitle: () =>
-                              onTapScreenTitle(AppRoutes.tutorsOneScreen),
-                        ),
-                        _buildScreenTitle(
-                          context,
-                          screenTitle: "tutors Three".tr,
-                          onTapScreenTitle: () =>
-                              onTapScreenTitle(AppRoutes.tutorsThreeScreen),
-                        ),
-                        _buildScreenTitle(
-                          context,
-                          screenTitle: "tutors".tr,
-                          onTapScreenTitle: () =>
-                              onTapScreenTitle(AppRoutes.tutorsScreen),
-                        ),
-                        _buildScreenTitle(
-                          context,
-                          screenTitle: "profile Four".tr,
-                          onTapScreenTitle: () =>
-                              onTapScreenTitle(AppRoutes.profileFourScreen),
-                        ),
-                        _buildScreenTitle(
-                          context,
-                          screenTitle: "profile One".tr,
-                          onTapScreenTitle: () =>
-                              onTapScreenTitle(AppRoutes.profileOneScreen),
-                        ),
-                        _buildScreenTitle(
-                          context,
-                          screenTitle: "Profile - Tab Container".tr,
-                          onTapScreenTitle: () => onTapScreenTitle(
-                              AppRoutes.profileTabContainerScreen),
-                        ),
-                        _buildScreenTitle(
-                          context,
-                          screenTitle: "help".tr,
-                          onTapScreenTitle: () =>
-                              onTapScreenTitle(AppRoutes.helpScreen),
-                        ),
-                      ],
+                      ),
                     ),
                   ),
-                ),
+                ],
               ),
-            ],
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 

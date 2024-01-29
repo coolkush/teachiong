@@ -1,30 +1,24 @@
+import 'bloc/profile_two_bloc.dart';
 import 'models/profile_two_model.dart';
 import 'package:flutter/material.dart';
 import 'package:kushagra_s_application2/core/app_export.dart';
 import 'package:kushagra_s_application2/widgets/custom_elevated_button.dart';
-import 'provider/profile_two_provider.dart';
 
 // ignore_for_file: must_be_immutable
-class ProfileTwoDialog extends StatefulWidget {
+class ProfileTwoDialog extends StatelessWidget {
   const ProfileTwoDialog({Key? key})
       : super(
           key: key,
         );
 
-  @override
-  ProfileTwoDialogState createState() => ProfileTwoDialogState();
   static Widget builder(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => ProfileTwoProvider(),
+    return BlocProvider<ProfileTwoBloc>(
+      create: (context) => ProfileTwoBloc(ProfileTwoState(
+        profileTwoModelObj: ProfileTwoModel(),
+      ))
+        ..add(ProfileTwoInitialEvent()),
       child: ProfileTwoDialog(),
     );
-  }
-}
-
-class ProfileTwoDialogState extends State<ProfileTwoDialog> {
-  @override
-  void initState() {
-    super.initState();
   }
 
   @override
@@ -38,14 +32,14 @@ class ProfileTwoDialogState extends State<ProfileTwoDialog> {
       child: Column(
         children: [
           Spacer(),
-          _buildDeleteAccountConfirmation(context),
+          _buildSeventyThree(context),
         ],
       ),
     );
   }
 
   /// Section Widget
-  Widget _buildDeleteAccountConfirmation(BuildContext context) {
+  Widget _buildSeventyThree(BuildContext context) {
     return Container(
       padding: EdgeInsets.symmetric(
         horizontal: 20.h,

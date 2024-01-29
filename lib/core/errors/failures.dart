@@ -1,6 +1,6 @@
 abstract class Failure {}
 
-//General Failures
+// General failures
 class ServerFailure extends Failure {}
 
 class CacheFailure extends Failure {}

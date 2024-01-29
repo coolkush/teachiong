@@ -1,30 +1,24 @@
+import 'bloc/profile_three_bloc.dart';
 import 'models/profile_three_model.dart';
 import 'package:flutter/material.dart';
 import 'package:kushagra_s_application2/core/app_export.dart';
 import 'package:kushagra_s_application2/widgets/custom_elevated_button.dart';
-import 'provider/profile_three_provider.dart';
 
 // ignore_for_file: must_be_immutable
-class ProfileThreeDialog extends StatefulWidget {
+class ProfileThreeDialog extends StatelessWidget {
   const ProfileThreeDialog({Key? key})
       : super(
           key: key,
         );
 
-  @override
-  ProfileThreeDialogState createState() => ProfileThreeDialogState();
   static Widget builder(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => ProfileThreeProvider(),
+    return BlocProvider<ProfileThreeBloc>(
+      create: (context) => ProfileThreeBloc(ProfileThreeState(
+        profileThreeModelObj: ProfileThreeModel(),
+      ))
+        ..add(ProfileThreeInitialEvent()),
       child: ProfileThreeDialog(),
     );
-  }
-}
-
-class ProfileThreeDialogState extends State<ProfileThreeDialog> {
-  @override
-  void initState() {
-    super.initState();
   }
 
   @override
@@ -38,14 +32,14 @@ class ProfileThreeDialogState extends State<ProfileThreeDialog> {
       child: Column(
         children: [
           Spacer(),
-          _buildProfileThreeColumn(context),
+          _buildSeventyThree(context),
         ],
       ),
     );
   }
 
   /// Section Widget
-  Widget _buildProfileThreeColumn(BuildContext context) {
+  Widget _buildSeventyThree(BuildContext context) {
     return Container(
       padding: EdgeInsets.symmetric(
         horizontal: 16.h,

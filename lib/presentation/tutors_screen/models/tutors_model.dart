@@ -1,41 +1,33 @@
+// ignore_for_file: must_be_immutable
+
+import 'package:equatable/equatable.dart';
 import '../../../core/app_export.dart';
 import 'taskcompleted_item_model.dart';
 import 'userprofile1_item_model.dart';
 
-class TutorsModel {
-  List<TaskcompletedItemModel> taskcompletedItemList = [
-    TaskcompletedItemModel(
-        checkmark: ImageConstant.imgCheckmark,
-        taskText: "Task\nCompleted",
-        count: "12"),
-    TaskcompletedItemModel(
-        checkmark: ImageConstant.imgStopwatch, taskText: "Time Duration")
-  ];
+/// This class defines the variables used in the [tutors_screen],
+/// and is typically used to hold data that is passed between different parts of the application.
+class TutorsModel extends Equatable {
+  TutorsModel({
+    this.taskcompletedItemList = const [],
+    this.userprofile1ItemList = const [],
+  }) {}
 
-  List<Userprofile1ItemModel> userprofile1ItemList = [
-    Userprofile1ItemModel(
-        drawPictureText: "Draw a picture of 5 Pet animals",
-        loremIpsumText:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do.",
-        submissionDateText: "Submission date",
-        submissionDateText1: "July 16, 2022",
-        statusText: "Pending",
-        progressText: "88%"),
-    Userprofile1ItemModel(
-        drawPictureText: "Draw a picture of 5 Pet animals",
-        loremIpsumText:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do.",
-        submissionDateText: "Submission date",
-        submissionDateText1: "July 16, 2022",
-        statusText: "Completed",
-        progressText: "100%"),
-    Userprofile1ItemModel(
-        drawPictureText: "Draw a picture of 5 Pet animals",
-        loremIpsumText:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do.",
-        submissionDateText: "Submission date",
-        submissionDateText1: "July 16, 2022",
-        statusText: "Completed",
-        progressText: "88%")
-  ];
+  List<TaskcompletedItemModel> taskcompletedItemList;
+
+  List<Userprofile1ItemModel> userprofile1ItemList;
+
+  TutorsModel copyWith({
+    List<TaskcompletedItemModel>? taskcompletedItemList,
+    List<Userprofile1ItemModel>? userprofile1ItemList,
+  }) {
+    return TutorsModel(
+      taskcompletedItemList:
+          taskcompletedItemList ?? this.taskcompletedItemList,
+      userprofile1ItemList: userprofile1ItemList ?? this.userprofile1ItemList,
+    );
+  }
+
+  @override
+  List<Object?> get props => [taskcompletedItemList, userprofile1ItemList];
 }

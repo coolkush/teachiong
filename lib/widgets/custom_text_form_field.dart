@@ -6,6 +6,7 @@ class CustomTextFormField extends StatelessWidget {
     Key? key,
     this.alignment,
     this.width,
+    this.scrollPadding,
     this.controller,
     this.focusNode,
     this.autofocus = true,
@@ -32,6 +33,8 @@ class CustomTextFormField extends StatelessWidget {
   final Alignment? alignment;
 
   final double? width;
+
+  final TextEditingController? scrollPadding;
 
   final TextEditingController? controller;
 
@@ -76,14 +79,16 @@ class CustomTextFormField extends StatelessWidget {
     return alignment != null
         ? Align(
             alignment: alignment ?? Alignment.center,
-            child: textFormFieldWidget,
+            child: textFormFieldWidget(context),
           )
-        : textFormFieldWidget;
+        : textFormFieldWidget(context);
   }
 
-  Widget get textFormFieldWidget => SizedBox(
+  Widget textFormFieldWidget(BuildContext context) => SizedBox(
         width: width ?? double.maxFinite,
         child: TextFormField(
+          scrollPadding:
+              EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
           controller: controller,
           focusNode: focusNode ?? FocusNode(),
           autofocus: autofocus!,

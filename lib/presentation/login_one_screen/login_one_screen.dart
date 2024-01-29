@@ -1,3 +1,4 @@
+import 'bloc/login_one_bloc.dart';
 import 'models/login_one_model.dart';
 import 'package:flutter/material.dart';
 import 'package:kushagra_s_application2/core/app_export.dart';
@@ -7,24 +8,16 @@ import 'package:kushagra_s_application2/widgets/app_bar/custom_app_bar.dart';
 import 'package:kushagra_s_application2/widgets/custom_elevated_button.dart';
 import 'package:kushagra_s_application2/widgets/custom_floating_text_field.dart';
 import 'package:kushagra_s_application2/widgets/custom_switch.dart';
-import 'provider/login_one_provider.dart';
 
-class LoginOneScreen extends StatefulWidget {
+class LoginOneScreen extends StatelessWidget {
   const LoginOneScreen({Key? key}) : super(key: key);
 
-  @override
-  LoginOneScreenState createState() => LoginOneScreenState();
-
   static Widget builder(BuildContext context) {
-    return ChangeNotifierProvider(
-        create: (context) => LoginOneProvider(), child: LoginOneScreen());
-  }
-}
-
-class LoginOneScreenState extends State<LoginOneScreen> {
-  @override
-  void initState() {
-    super.initState();
+    return BlocProvider<LoginOneBloc>(
+        create: (context) =>
+            LoginOneBloc(LoginOneState(loginOneModelObj: LoginOneModel()))
+              ..add(LoginOneInitialEvent()),
+        child: LoginOneScreen());
   }
 
   @override
@@ -48,10 +41,10 @@ class LoginOneScreenState extends State<LoginOneScreen> {
                     padding:
                         EdgeInsets.symmetric(horizontal: 24.h, vertical: 21.v),
                     child: Column(children: [
-                      Selector<LoginOneProvider, TextEditingController?>(
-                          selector: (context, provider) =>
-                              provider.uniqueIdvalueController,
-                          builder: (context, uniqueIdvalueController, child) {
+                      BlocSelector<LoginOneBloc, LoginOneState,
+                              TextEditingController?>(
+                          selector: (state) => state.uniqueIdvalueController,
+                          builder: (context, uniqueIdvalueController) {
                             return CustomFloatingTextField(
                                 controller: uniqueIdvalueController,
                                 labelText: "lbl_unique_id".tr,
@@ -88,13 +81,15 @@ class LoginOneScreenState extends State<LoginOneScreen> {
           padding: EdgeInsets.only(top: 1.v),
           child: Text("lbl_set_quick_login".tr,
               style: CustomTextStyles.titleMediumSemiBold)),
-      Selector<LoginOneProvider, bool?>(
-          selector: (context, provider) => provider.isSelectedSwitch,
-          builder: (context, isSelectedSwitch, child) {
+      BlocSelector<LoginOneBloc, LoginOneState, bool?>(
+          selector: (state) => state.isSelectedSwitch,
+          builder: (context, isSelectedSwitch) {
             return CustomSwitch(
                 value: isSelectedSwitch,
                 onChange: (value) {
-                  context.read<LoginOneProvider>().changeSwitchBox1(value);
+                  context
+                      .read<LoginOneBloc>()
+                      .add(ChangeSwitchEvent(value: value));
                 });
           })
     ]);

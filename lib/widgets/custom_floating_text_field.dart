@@ -6,6 +6,7 @@ class CustomFloatingTextField extends StatelessWidget {
     Key? key,
     this.alignment,
     this.width,
+    this.scrollPadding,
     this.controller,
     this.focusNode,
     this.autofocus = true,
@@ -34,6 +35,8 @@ class CustomFloatingTextField extends StatelessWidget {
   final Alignment? alignment;
 
   final double? width;
+
+  final TextEditingController? scrollPadding;
 
   final TextEditingController? controller;
 
@@ -82,14 +85,16 @@ class CustomFloatingTextField extends StatelessWidget {
     return alignment != null
         ? Align(
             alignment: alignment ?? Alignment.center,
-            child: floatingTextFieldWidget,
+            child: floatingTextFieldWidget(context),
           )
-        : floatingTextFieldWidget;
+        : floatingTextFieldWidget(context);
   }
 
-  Widget get floatingTextFieldWidget => SizedBox(
+  Widget floatingTextFieldWidget(BuildContext context) => SizedBox(
         width: width ?? double.maxFinite,
         child: TextFormField(
+          scrollPadding:
+              EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
           controller: controller,
           focusNode: focusNode ?? FocusNode(),
           autofocus: autofocus!,

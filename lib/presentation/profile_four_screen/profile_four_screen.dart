@@ -1,3 +1,4 @@
+import 'bloc/profile_four_bloc.dart';
 import 'models/profile_four_model.dart';
 import 'package:flutter/material.dart';
 import 'package:kushagra_s_application2/core/app_export.dart';
@@ -5,47 +6,43 @@ import 'package:kushagra_s_application2/widgets/app_bar/appbar_leading_image.dar
 import 'package:kushagra_s_application2/widgets/app_bar/appbar_title.dart';
 import 'package:kushagra_s_application2/widgets/app_bar/custom_app_bar.dart';
 import 'package:kushagra_s_application2/widgets/custom_floating_text_field.dart';
-import 'provider/profile_four_provider.dart';
 
-class ProfileFourScreen extends StatefulWidget {
+class ProfileFourScreen extends StatelessWidget {
   const ProfileFourScreen({Key? key}) : super(key: key);
 
-  @override
-  ProfileFourScreenState createState() => ProfileFourScreenState();
-
   static Widget builder(BuildContext context) {
-    return ChangeNotifierProvider(
-        create: (context) => ProfileFourProvider(), child: ProfileFourScreen());
-  }
-}
-
-class ProfileFourScreenState extends State<ProfileFourScreen> {
-  @override
-  void initState() {
-    super.initState();
+    return BlocProvider<ProfileFourBloc>(
+        create: (context) => ProfileFourBloc(
+            ProfileFourState(profileFourModelObj: ProfileFourModel()))
+          ..add(ProfileFourInitialEvent()),
+        child: ProfileFourScreen());
   }
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-        child: Scaffold(
-            resizeToAvoidBottomInset: false,
-            appBar: _buildAppBar(context),
-            body: Container(
-                width: double.maxFinite,
-                padding: EdgeInsets.symmetric(horizontal: 24.h, vertical: 6.v),
-                child: Column(children: [
-                  _buildMyProfile(context),
-                  SizedBox(height: 14.v),
-                  _buildHistory(context),
-                  SizedBox(height: 14.v),
-                  _buildHelp(context),
-                  SizedBox(height: 14.v),
-                  _buildPrivacy(context),
-                  SizedBox(height: 14.v),
-                  _buildAccount(context),
-                  SizedBox(height: 5.v)
-                ]))));
+    return BlocBuilder<ProfileFourBloc, ProfileFourState>(
+        builder: (context, state) {
+      return SafeArea(
+          child: Scaffold(
+              resizeToAvoidBottomInset: false,
+              appBar: _buildAppBar(context),
+              body: Container(
+                  width: double.maxFinite,
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 24.h, vertical: 6.v),
+                  child: Column(children: [
+                    _buildMyProfile(context),
+                    SizedBox(height: 14.v),
+                    _buildHistory(context),
+                    SizedBox(height: 14.v),
+                    _buildHelp(context),
+                    SizedBox(height: 14.v),
+                    _buildPrivacy(context),
+                    SizedBox(height: 14.v),
+                    _buildAccount(context),
+                    SizedBox(height: 5.v)
+                  ]))));
+    });
   }
 
   /// Section Widget
@@ -64,9 +61,10 @@ class ProfileFourScreenState extends State<ProfileFourScreen> {
 
   /// Section Widget
   Widget _buildMyProfile(BuildContext context) {
-    return Selector<ProfileFourProvider, TextEditingController?>(
-        selector: (context, provider) => provider.myProfileController,
-        builder: (context, myProfileController, child) {
+    return BlocSelector<ProfileFourBloc, ProfileFourState,
+            TextEditingController?>(
+        selector: (state) => state.myProfileController,
+        builder: (context, myProfileController) {
           return CustomFloatingTextField(
               controller: myProfileController,
               labelText: "lbl_my_profile".tr,
@@ -88,9 +86,10 @@ class ProfileFourScreenState extends State<ProfileFourScreen> {
 
   /// Section Widget
   Widget _buildHistory(BuildContext context) {
-    return Selector<ProfileFourProvider, TextEditingController?>(
-        selector: (context, provider) => provider.historyController,
-        builder: (context, historyController, child) {
+    return BlocSelector<ProfileFourBloc, ProfileFourState,
+            TextEditingController?>(
+        selector: (state) => state.historyController,
+        builder: (context, historyController) {
           return CustomFloatingTextField(
               controller: historyController,
               labelText: "lbl_history".tr,
@@ -112,9 +111,10 @@ class ProfileFourScreenState extends State<ProfileFourScreen> {
 
   /// Section Widget
   Widget _buildHelp(BuildContext context) {
-    return Selector<ProfileFourProvider, TextEditingController?>(
-        selector: (context, provider) => provider.helpController,
-        builder: (context, helpController, child) {
+    return BlocSelector<ProfileFourBloc, ProfileFourState,
+            TextEditingController?>(
+        selector: (state) => state.helpController,
+        builder: (context, helpController) {
           return CustomFloatingTextField(
               controller: helpController,
               labelText: "lbl_help".tr,
@@ -136,9 +136,10 @@ class ProfileFourScreenState extends State<ProfileFourScreen> {
 
   /// Section Widget
   Widget _buildPrivacy(BuildContext context) {
-    return Selector<ProfileFourProvider, TextEditingController?>(
-        selector: (context, provider) => provider.privacyController,
-        builder: (context, privacyController, child) {
+    return BlocSelector<ProfileFourBloc, ProfileFourState,
+            TextEditingController?>(
+        selector: (state) => state.privacyController,
+        builder: (context, privacyController) {
           return CustomFloatingTextField(
               controller: privacyController,
               labelText: "lbl_privacy".tr,
@@ -160,9 +161,10 @@ class ProfileFourScreenState extends State<ProfileFourScreen> {
 
   /// Section Widget
   Widget _buildAccount(BuildContext context) {
-    return Selector<ProfileFourProvider, TextEditingController?>(
-        selector: (context, provider) => provider.accountController,
-        builder: (context, accountController, child) {
+    return BlocSelector<ProfileFourBloc, ProfileFourState,
+            TextEditingController?>(
+        selector: (state) => state.accountController,
+        builder: (context, accountController) {
           return CustomFloatingTextField(
               controller: accountController,
               labelText: "lbl_account".tr,

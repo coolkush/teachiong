@@ -1,3 +1,4 @@
+import 'bloc/profile_tab_container_bloc.dart';
 import 'models/profile_tab_container_model.dart';
 import 'package:flutter/material.dart';
 import 'package:kushagra_s_application2/core/app_export.dart';
@@ -6,7 +7,6 @@ import 'package:kushagra_s_application2/widgets/app_bar/appbar_leading_image.dar
 import 'package:kushagra_s_application2/widgets/app_bar/appbar_title.dart';
 import 'package:kushagra_s_application2/widgets/app_bar/custom_app_bar.dart';
 import 'package:table_calendar/table_calendar.dart';
-import 'provider/profile_tab_container_provider.dart';
 
 class ProfileTabContainerScreen extends StatefulWidget {
   const ProfileTabContainerScreen({Key? key}) : super(key: key);
@@ -16,8 +16,10 @@ class ProfileTabContainerScreen extends StatefulWidget {
       ProfileTabContainerScreenState();
 
   static Widget builder(BuildContext context) {
-    return ChangeNotifierProvider(
-        create: (context) => ProfileTabContainerProvider(),
+    return BlocProvider<ProfileTabContainerBloc>(
+        create: (context) => ProfileTabContainerBloc(ProfileTabContainerState(
+            profileTabContainerModelObj: ProfileTabContainerModel()))
+          ..add(ProfileTabContainerInitialEvent()),
         child: ProfileTabContainerScreen());
   }
 }
@@ -42,7 +44,7 @@ class ProfileTabContainerScreenState extends State<ProfileTabContainerScreen>
                 width: SizeUtils.width,
                 child: SingleChildScrollView(
                     child: Column(children: [
-                  _buildDateRow(context),
+                  _buildFrameTen(context),
                   SizedBox(height: 4.v),
                   _buildCalendar(context),
                   SizedBox(height: 24.v),
@@ -75,7 +77,7 @@ class ProfileTabContainerScreenState extends State<ProfileTabContainerScreen>
   }
 
   /// Section Widget
-  Widget _buildDateRow(BuildContext context) {
+  Widget _buildFrameTen(BuildContext context) {
     return Padding(
         padding: EdgeInsets.symmetric(horizontal: 24.h),
         child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
@@ -96,8 +98,8 @@ class ProfileTabContainerScreenState extends State<ProfileTabContainerScreen>
 
   /// Section Widget
   Widget _buildCalendar(BuildContext context) {
-    return Consumer<ProfileTabContainerProvider>(
-        builder: (context, provider, child) {
+    return BlocBuilder<ProfileTabContainerBloc, ProfileTabContainerState>(
+        builder: (context, state) {
       return SizedBox(
           height: 74.v,
           width: 327.h,
@@ -106,7 +108,7 @@ class ProfileTabContainerScreenState extends State<ProfileTabContainerScreen>
               firstDay: DateTime(DateTime.now().year - 5),
               lastDay: DateTime(DateTime.now().year + 5),
               calendarFormat: CalendarFormat.month,
-              rangeSelectionMode: provider.rangeSelectionMode,
+              rangeSelectionMode: state.rangeSelectionMode,
               startingDayOfWeek: StartingDayOfWeek.sunday,
               headerStyle:
                   HeaderStyle(formatButtonVisible: false, titleCentered: true),
@@ -114,24 +116,24 @@ class ProfileTabContainerScreenState extends State<ProfileTabContainerScreen>
                   outsideDaysVisible: false, isTodayHighlighted: true),
               daysOfWeekStyle: DaysOfWeekStyle(),
               headerVisible: false,
-              focusedDay: provider.focusedDay ?? DateTime.now(),
-              rangeStartDay: provider.rangeStart,
-              rangeEndDay: provider.rangeEnd,
+              focusedDay: state.focusedDay ?? DateTime.now(),
+              rangeStartDay: state.rangeStart,
+              rangeEndDay: state.rangeEnd,
               onDaySelected: (selectedDay, focusedDay) {
-                if (!isSameDay(selectedDay, selectedDay)) {
-                  provider.focusedDay = focusedDay;
-                  provider.selectedDay = selectedDay;
-                  provider.rangeSelectionMode = RangeSelectionMode.toggledOn;
+                if (!isSameDay(state.selectedDay, selectedDay)) {
+                  state.focusedDay = focusedDay;
+                  state.selectedDay = selectedDay;
+                  state.rangeSelectionMode = RangeSelectionMode.toggledOn;
                 }
               },
               onRangeSelected: (start, end, focusedDay) {
-                provider.focusedDay = focusedDay;
-                provider.rangeEnd = end;
-                provider.rangeStart = start;
-                provider.rangeSelectionMode = RangeSelectionMode.toggledOn;
+                state.focusedDay = focusedDay;
+                state.rangeEnd = end;
+                state.rangeStart = start;
+                state.rangeSelectionMode = RangeSelectionMode.toggledOn;
               },
               onPageChanged: (focusedDay) {
-                provider.focusedDay = focusedDay;
+                state.focusedDay = focusedDay;
               }));
     });
   }

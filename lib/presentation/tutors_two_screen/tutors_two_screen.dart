@@ -1,4 +1,5 @@
 import '../tutors_two_screen/widgets/userprofile_item_widget.dart';
+import 'bloc/tutors_two_bloc.dart';
 import 'models/tutors_two_model.dart';
 import 'models/userprofile_item_model.dart';
 import 'package:flutter/material.dart';
@@ -6,24 +7,16 @@ import 'package:kushagra_s_application2/core/app_export.dart';
 import 'package:kushagra_s_application2/widgets/app_bar/appbar_leading_image.dart';
 import 'package:kushagra_s_application2/widgets/app_bar/custom_app_bar.dart';
 import 'package:outline_gradient_button/outline_gradient_button.dart';
-import 'provider/tutors_two_provider.dart';
 
-class TutorsTwoScreen extends StatefulWidget {
+class TutorsTwoScreen extends StatelessWidget {
   const TutorsTwoScreen({Key? key}) : super(key: key);
 
-  @override
-  TutorsTwoScreenState createState() => TutorsTwoScreenState();
-
   static Widget builder(BuildContext context) {
-    return ChangeNotifierProvider(
-        create: (context) => TutorsTwoProvider(), child: TutorsTwoScreen());
-  }
-}
-
-class TutorsTwoScreenState extends State<TutorsTwoScreen> {
-  @override
-  void initState() {
-    super.initState();
+    return BlocProvider<TutorsTwoBloc>(
+        create: (context) =>
+            TutorsTwoBloc(TutorsTwoState(tutorsTwoModelObj: TutorsTwoModel()))
+              ..add(TutorsTwoInitialEvent()),
+        child: TutorsTwoScreen());
   }
 
   @override
@@ -165,21 +158,24 @@ class TutorsTwoScreenState extends State<TutorsTwoScreen> {
           Text("msg_recent_activities".tr,
               style: CustomTextStyles.titleMediumSemiBold),
           SizedBox(height: 7.v),
-          Consumer<TutorsTwoProvider>(builder: (context, provider, child) {
-            return ListView.separated(
-                physics: NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                separatorBuilder: (context, index) {
-                  return SizedBox(height: 10.v);
-                },
-                itemCount:
-                    provider.tutorsTwoModelObj.userprofileItemList.length,
-                itemBuilder: (context, index) {
-                  UserprofileItemModel model =
-                      provider.tutorsTwoModelObj.userprofileItemList[index];
-                  return UserprofileItemWidget(model);
-                });
-          })
+          BlocSelector<TutorsTwoBloc, TutorsTwoState, TutorsTwoModel?>(
+              selector: (state) => state.tutorsTwoModelObj,
+              builder: (context, tutorsTwoModelObj) {
+                return ListView.separated(
+                    physics: NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    separatorBuilder: (context, index) {
+                      return SizedBox(height: 10.v);
+                    },
+                    itemCount:
+                        tutorsTwoModelObj?.userprofileItemList.length ?? 0,
+                    itemBuilder: (context, index) {
+                      UserprofileItemModel model =
+                          tutorsTwoModelObj?.userprofileItemList[index] ??
+                              UserprofileItemModel();
+                      return UserprofileItemWidget(model);
+                    });
+              })
         ]));
   }
 

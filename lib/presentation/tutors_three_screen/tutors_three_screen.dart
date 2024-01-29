@@ -1,4 +1,5 @@
 import '../tutors_three_screen/widgets/timerbutton_item_widget.dart';
+import 'bloc/tutors_three_bloc.dart';
 import 'models/timerbutton_item_model.dart';
 import 'models/tutors_three_model.dart';
 import 'package:flutter/material.dart';
@@ -6,24 +7,16 @@ import 'package:kushagra_s_application2/core/app_export.dart';
 import 'package:kushagra_s_application2/widgets/app_bar/appbar_leading_image.dart';
 import 'package:kushagra_s_application2/widgets/app_bar/appbar_title.dart';
 import 'package:kushagra_s_application2/widgets/app_bar/custom_app_bar.dart';
-import 'provider/tutors_three_provider.dart';
 
-class TutorsThreeScreen extends StatefulWidget {
+class TutorsThreeScreen extends StatelessWidget {
   const TutorsThreeScreen({Key? key}) : super(key: key);
 
-  @override
-  TutorsThreeScreenState createState() => TutorsThreeScreenState();
-
   static Widget builder(BuildContext context) {
-    return ChangeNotifierProvider(
-        create: (context) => TutorsThreeProvider(), child: TutorsThreeScreen());
-  }
-}
-
-class TutorsThreeScreenState extends State<TutorsThreeScreen> {
-  @override
-  void initState() {
-    super.initState();
+    return BlocProvider<TutorsThreeBloc>(
+        create: (context) => TutorsThreeBloc(
+            TutorsThreeState(tutorsThreeModelObj: TutorsThreeModel()))
+          ..add(TutorsThreeInitialEvent()),
+        child: TutorsThreeScreen());
   }
 
   @override
@@ -34,22 +27,26 @@ class TutorsThreeScreenState extends State<TutorsThreeScreen> {
             appBar: _buildAppBar(context),
             body: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 24.h),
-                child: Consumer<TutorsThreeProvider>(
-                    builder: (context, provider, child) {
-                  return ListView.separated(
-                      physics: BouncingScrollPhysics(),
-                      shrinkWrap: true,
-                      separatorBuilder: (context, index) {
-                        return SizedBox(height: 13.v);
-                      },
-                      itemCount: provider
-                          .tutorsThreeModelObj.timerbuttonItemList.length,
-                      itemBuilder: (context, index) {
-                        TimerbuttonItemModel model = provider
-                            .tutorsThreeModelObj.timerbuttonItemList[index];
-                        return TimerbuttonItemWidget(model);
-                      });
-                }))));
+                child: BlocSelector<TutorsThreeBloc, TutorsThreeState,
+                        TutorsThreeModel?>(
+                    selector: (state) => state.tutorsThreeModelObj,
+                    builder: (context, tutorsThreeModelObj) {
+                      return ListView.separated(
+                          physics: BouncingScrollPhysics(),
+                          shrinkWrap: true,
+                          separatorBuilder: (context, index) {
+                            return SizedBox(height: 13.v);
+                          },
+                          itemCount:
+                              tutorsThreeModelObj?.timerbuttonItemList.length ??
+                                  0,
+                          itemBuilder: (context, index) {
+                            TimerbuttonItemModel model = tutorsThreeModelObj
+                                    ?.timerbuttonItemList[index] ??
+                                TimerbuttonItemModel();
+                            return TimerbuttonItemWidget(model);
+                          });
+                    }))));
   }
 
   /// Section Widget

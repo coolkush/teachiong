@@ -1,0 +1,204 @@
+import 'bloc/profile_one_bloc.dart';
+import 'models/profile_one_model.dart';
+import 'package:flutter/material.dart';
+import 'package:kushagra_s_application2/core/app_export.dart';
+import 'package:kushagra_s_application2/core/utils/validation_functions.dart';
+import 'package:kushagra_s_application2/widgets/app_bar/appbar_leading_image.dart';
+import 'package:kushagra_s_application2/widgets/app_bar/appbar_title.dart';
+import 'package:kushagra_s_application2/widgets/app_bar/custom_app_bar.dart';
+import 'package:kushagra_s_application2/widgets/custom_floating_text_field.dart';
+
+// ignore_for_file: must_be_immutable
+class ProfileOneScreen extends StatelessWidget {
+  ProfileOneScreen({Key? key}) : super(key: key);
+
+  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  static Widget builder(BuildContext context) {
+    return BlocProvider<ProfileOneBloc>(
+        create: (context) => ProfileOneBloc(
+            ProfileOneState(profileOneModelObj: ProfileOneModel()))
+          ..add(ProfileOneInitialEvent()),
+        child: ProfileOneScreen());
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<ProfileOneBloc, ProfileOneState>(
+        builder: (context, state) {
+      return SafeArea(
+          child: Scaffold(
+              resizeToAvoidBottomInset: false,
+              appBar: _buildAppBar(context),
+              body: SizedBox(
+                  width: SizeUtils.width,
+                  child: SingleChildScrollView(
+                      padding: EdgeInsets.only(
+                          bottom: MediaQuery.of(context).viewInsets.bottom),
+                      child: Form(
+                          key: _formKey,
+                          child: Container(
+                              width: double.maxFinite,
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 23.h, vertical: 14.v),
+                              child: Column(children: [
+                                CustomImageView(
+                                    imagePath: ImageConstant.imgEllipse23,
+                                    height: 101.adaptSize,
+                                    width: 101.adaptSize,
+                                    radius: BorderRadius.circular(50.h)),
+                                SizedBox(height: 19.v),
+                                _buildName(context),
+                                SizedBox(height: 14.v),
+                                _buildDateOfBirth(context),
+                                SizedBox(height: 14.v),
+                                _buildKidsIdvalue(context),
+                                SizedBox(height: 15.v),
+                                _buildName1(context),
+                                SizedBox(height: 13.v),
+                                _buildEmail(context),
+                                SizedBox(height: 13.v),
+                                _buildPhoneNumber(context),
+                                SizedBox(height: 5.v)
+                              ])))))));
+    });
+  }
+
+  /// Section Widget
+  PreferredSizeWidget _buildAppBar(BuildContext context) {
+    return CustomAppBar(
+        leadingWidth: 40.h,
+        leading: AppbarLeadingImage(
+            imagePath: ImageConstant.imgArrowLeft,
+            margin: EdgeInsets.only(left: 16.h, top: 16.v, bottom: 15.v),
+            onTap: () {
+              onTapArrowLeft(context);
+            }),
+        centerTitle: true,
+        title: AppbarTitle(text: "lbl_profile".tr));
+  }
+
+  /// Section Widget
+  Widget _buildName(BuildContext context) {
+    return BlocSelector<ProfileOneBloc, ProfileOneState,
+            TextEditingController?>(
+        selector: (state) => state.nameController,
+        builder: (context, nameController) {
+          return CustomFloatingTextField(
+              controller: nameController,
+              labelText: "lbl_kid_name".tr,
+              labelStyle: theme.textTheme.titleMedium!,
+              hintText: "lbl_kid_name".tr,
+              validator: (value) {
+                if (!isText(value)) {
+                  return "err_msg_please_enter_valid_text".tr;
+                }
+                return null;
+              });
+        });
+  }
+
+  /// Section Widget
+  Widget _buildDateOfBirth(BuildContext context) {
+    return BlocSelector<ProfileOneBloc, ProfileOneState,
+            TextEditingController?>(
+        selector: (state) => state.dateOfBirthController,
+        builder: (context, dateOfBirthController) {
+          return CustomFloatingTextField(
+              controller: dateOfBirthController,
+              labelText: "lbl_date_of_birth".tr,
+              labelStyle: theme.textTheme.titleMedium!,
+              hintText: "lbl_date_of_birth".tr,
+              contentPadding: EdgeInsets.fromLTRB(16.h, 24.v, 16.h, 8.v));
+        });
+  }
+
+  /// Section Widget
+  Widget _buildKidsIdvalue(BuildContext context) {
+    return BlocSelector<ProfileOneBloc, ProfileOneState,
+            TextEditingController?>(
+        selector: (state) => state.kidsIdvalueController,
+        builder: (context, kidsIdvalueController) {
+          return CustomFloatingTextField(
+              controller: kidsIdvalueController,
+              labelText: "lbl_kid_s_id".tr,
+              labelStyle: theme.textTheme.titleMedium!,
+              hintText: "lbl_kid_s_id".tr,
+              suffix: Container(
+                  margin: EdgeInsets.symmetric(horizontal: 4.h),
+                  child: CustomImageView(
+                      imagePath: ImageConstant.imgCopy1,
+                      height: 24.adaptSize,
+                      width: 24.adaptSize)),
+              suffixConstraints: BoxConstraints(maxHeight: 56.v));
+        });
+  }
+
+  /// Section Widget
+  Widget _buildName1(BuildContext context) {
+    return BlocSelector<ProfileOneBloc, ProfileOneState,
+            TextEditingController?>(
+        selector: (state) => state.nameController1,
+        builder: (context, nameController1) {
+          return CustomFloatingTextField(
+              controller: nameController1,
+              labelText: "lbl_parent_name".tr,
+              labelStyle: theme.textTheme.titleMedium!,
+              hintText: "lbl_parent_name".tr,
+              validator: (value) {
+                if (!isText(value)) {
+                  return "err_msg_please_enter_valid_text".tr;
+                }
+                return null;
+              });
+        });
+  }
+
+  /// Section Widget
+  Widget _buildEmail(BuildContext context) {
+    return BlocSelector<ProfileOneBloc, ProfileOneState,
+            TextEditingController?>(
+        selector: (state) => state.emailController,
+        builder: (context, emailController) {
+          return CustomFloatingTextField(
+              controller: emailController,
+              labelText: "lbl_parent_email".tr,
+              labelStyle: theme.textTheme.titleMedium!,
+              hintText: "lbl_parent_email".tr,
+              textInputType: TextInputType.emailAddress,
+              validator: (value) {
+                if (value == null || (!isValidEmail(value, isRequired: true))) {
+                  return "err_msg_please_enter_valid_email".tr;
+                }
+                return null;
+              });
+        });
+  }
+
+  /// Section Widget
+  Widget _buildPhoneNumber(BuildContext context) {
+    return BlocSelector<ProfileOneBloc, ProfileOneState,
+            TextEditingController?>(
+        selector: (state) => state.phoneNumberController,
+        builder: (context, phoneNumberController) {
+          return CustomFloatingTextField(
+              controller: phoneNumberController,
+              labelText: "msg_parent_phone_number".tr,
+              labelStyle: theme.textTheme.titleMedium!,
+              hintText: "msg_parent_phone_number".tr,
+              textInputAction: TextInputAction.done,
+              textInputType: TextInputType.phone,
+              validator: (value) {
+                if (!isValidPhone(value)) {
+                  return "err_msg_please_enter_valid_phone_number".tr;
+                }
+                return null;
+              });
+        });
+  }
+
+  /// Navigates to the previous screen.
+  onTapArrowLeft(BuildContext context) {
+    NavigatorService.goBack();
+  }
+}
